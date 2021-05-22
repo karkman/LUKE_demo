@@ -98,3 +98,18 @@ rule dada_16S:
 		"-- Running DADA2 --"
 	shell:
 		"Rscript {params}"
+
+rule plot_16S:
+	input:
+		"dada_table.rds",
+		"dada_tax.rds"
+	output:
+		"dada_physeq.rds"
+	params:
+		"src/plot_script.R"
+	conda:
+		"envs/plot_env.yml"
+	message:
+		"-- Drawing plots from ASV data --"
+	shell:
+		"Rscript {params}"

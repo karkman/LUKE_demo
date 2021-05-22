@@ -1,0 +1,10 @@
+name: plot_env
+channels:
+        - bioconda
+        - conda-forge
+        - r
+dependencies:
+        - r-base=4.0.5
+        - r-tidyverse
+        - bioconductor-phyloseq
+        - bioconductor-biostrings
