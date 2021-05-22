@@ -90,6 +90,8 @@ rule dada_16S:
 	output:
 		"dada_table.rds",
 		"dada_tax.rds"
+	threads:
+		32
 	params:
  		"src/dada2_script.R"
 	conda:

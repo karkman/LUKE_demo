@@ -14,4 +14,8 @@ taxa_names(ps) <- paste0("ASV", seq(ntaxa(ps)))
 
 saveRDS(ps, file="dada_physeq.rds")
 
-ps %>% sample_sums %>% 
+tibble(sample=sample_names(ps), sum=sample_sums(ps)) %>% \
+	ggplot(aes(x=sample, y=sum)) + 
+	geom_bar(stat="identity") + theme_classic() + 
+	coord_flip() + scale_y_continuous(expand=c(0,0)) + 
+	labs(y="Library size", x="")
