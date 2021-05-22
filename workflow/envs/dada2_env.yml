@@ -1,0 +1,8 @@
+name: dada2_env
+channels:
+        - bioconda
+        - conda-forge
+dependencies:
+        - r-base=4.0.5
+        - bioconductor-dada2=1.18.0
+        - r-matrix=1.3_2

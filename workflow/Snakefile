@@ -1,0 +1,72 @@
+SAMPLES,READS, = glob_wildcards("data/{sample}_{read}.fastq.gz")
+
+rule all:
+	input:
+		"data/multiqc_report.html",
+		"dada_table.rds", "dada_tax.rds"
+
+rule fastqc_raw:
+	input:
+		"data/{sample}_{read}.fastq.gz"
+	output:
+		"data/FASTQC/{sample}_{read}_fastqc.zip"
+	message:
+		"-- Quality check of raw data with Fastqc --"
+	conda:
+		"envs/QC_env.yml"
+	threads:
+		2
+	shell:
+              "fastqc --quiet -t {threads} --outdir data/FASTQC -f fastq {input}"
+
+rule multiqc_raw:
+	input:
+		expand("data/FASTQC/{sample}_{read}_fastqc.zip", sample=SAMPLES, read=READS)
+	output:
+		"data/multiqc_report.html"
+	message:
+		"-- Running MultiQC for raw data --"
+	conda:
+		"envs/QC_env.yml"
+	shell:
+		"multiqc -f --interactive --quiet data/ -o data/"
+
+rule cutadapt:
+	input:
+		fw= "data/{sample}_1.fastq.gz",
+		rv= "data/{sample}_2.fastq.gz"
+	params:
+		"{sample}"
+	output:
+		bacfw="trimmed/{sample}_16S.1.fastq.gz",
+		bacrv="trimmed/{sample}_16S.2.fastq.gz",
+		#fungfw="trimmed/{sample}_ITS.1.fastq",
+		#fungITS="trimmed/{sample}_ITS.2.fastq",
+	message:
+		"-- Running Cutadapt --"
+	conda:
+		"envs/cutadapt.yml"
+	shell:
+		"""
+		cutadapt \
+    		-e 0.2 --no-indels --discard-untrimmed \
+    		-g 16S=GTGCCAGCMGCCGCGGTAA -g ITS=GTGARTCATCGARTCTTTG \
+			-G 16S=GGACTACHVHHHTWTCTAAT -G ITS=TCCTCCGCTTATTGATATGC \
+    		-o trimmed/{params}_{{name}}.1.fastq.gz -p trimmed/{params}_{{name}}.2.fastq.gz \
+    		{input.fw} {input.rv}
+			"""
+
+rule dada_16S:
+	input:
+		expand("trimmed/{sample}_16S.{read}.fastq.gz", sample=SAMPLES, read=READS)
+	output:
+		"dada_table.rds",
+		"dada_tax.rds"
+	params:
+ 		"src/dada2_script.R"
+	conda:
+		"envs/dada2_env.yml"
+	message:
+		"-- Running DADA2 --"
+	shell:
+		"Rscript {params}"
