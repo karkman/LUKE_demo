@@ -60,7 +60,7 @@ rule cutadapt:
 
 rule fastqc_trim:
 	input:
-		"trimmed/trimmed/{sample}_16S.{read}.fastq.gz"
+		"trimmed/{sample}_16S.{read}.fastq.gz"
 	output:
 		"trimmed/FASTQC/{sample}_16S.{read}_fastqc.zip"
 	message:
