@@ -1,4 +1,3 @@
-Run,SampleName
 SRR11922733,toho,A14,orgcer,a
 SRR11922746,toho,A14,orgcer,s
 SRR11922729,toho,A2,orgcer,a
