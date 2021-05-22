@@ -35,8 +35,8 @@ mergers <- mergePairs(dadaFs, filtFs, dadaRs, filtRs, verbose=TRUE)
 
 seqtab <- makeSequenceTable(mergers)
 seqtab.nochim <- removeBimeraDenovo(seqtab, method="consensus", multithread=TRUE, verbose=TRUE)
-taxa <- assignTaxonomy(seqtab.nochim, "~/Work/Bioinfo/Databases/SILVA138/training_set.138_SSURef_NR99.fa.gz", multithread=TRUE)
-taxa <- addSpecies(taxa, "~/Work/Bioinfo/Databases/SILVA138/species_assignment.138_SSURef_NR99.fa.gz")
+taxa <- assignTaxonomy(seqtab.nochim, "/users/antkark/scratch/databases/SILVA138/training_set.138_SSURef_NR99.fa.gz", multithread=TRUE)
+taxa <- addSpecies(taxa, "/users/antkark/scratch/databases/SILVA138/species_assignment.138_SSURef_NR99.fa.gz")
 
 saveRDS(seqtab.nochim, file="dada_table.rds")
 saveRDS(taxa, file="dada_tax.rds")
