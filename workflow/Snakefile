@@ -3,7 +3,9 @@ SAMPLES,READS, = glob_wildcards("data/{sample}_{read}.fastq.gz")
 rule all:
 	input:
 		"data/multiqc_report.html",
-		"dada_table.rds", "dada_tax.rds"
+		"trimmed/multiqc_report.html",
+		"dada_table.rds",
+		"dada_tax.rds"
 
 rule fastqc_raw:
 	input:
