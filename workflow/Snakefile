@@ -56,6 +56,32 @@ rule cutadapt:
     		{input.fw} {input.rv}
 			"""
 
+rule fastqc_trim:
+	input:
+		"trimmed/trimmed/{sample}_16S.{read}.fastq.gz"
+	output:
+		"trimmed/FASTQC/{sample}_16S.{read}_fastqc.zip"
+	message:
+		"-- Quality check of trimmed data with Fastqc --"
+	conda:
+		"envs/QC_env.yml"
+	threads:
+		2
+	shell:
+		"fastqc --quiet -t {threads} --outdir trimmed/FASTQC -f fastq {input}"
+
+rule multiqc_trim:
+	input:
+		expand("trimmed/FASTQC/{sample}_16S.{read}_fastqc.zip", sample=SAMPLES, read=READS)
+	output:
+		"trimmed/multiqc_report.html"
+	message:
+		"-- Running MultiQC for trimmed data--"
+	conda:
+		"envs/QC_env.yml"
+	shell:
+		"multiqc -f --interactive --quiet trimmed/ -o trimmed/"
+
 rule dada_16S:
 	input:
 		expand("trimmed/{sample}_16S.{read}.fastq.gz", sample=SAMPLES, read=READS)
