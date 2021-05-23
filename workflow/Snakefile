@@ -2,12 +2,24 @@ SAMPLES,READS, = glob_wildcards("data/{sample}_{read}.fastq.gz")
 
 rule all:
 	input:
+		"metadata.txt",
 		"data/multiqc_report.html",
 		"trimmed_data/multiqc_report.html",
 		"dada_table.rds",
 		"dada_tax.rds",
 		 "dada_physeq.rds"
 
+rule fetch_metadata:
+	output:
+		"metadata.txt"
+	params:
+		"PRJNA637213"
+	conda:
+		"envs/SRA_env.yml"
+	message:
+		"-- Fetching metadata --"
+	shell:
+		"esearch -db sra -query {params} |efetch --format runinfo |awk -F "," 'NR>1 {print $0}' |cut -d "," -f 1,30|sed 's/_/,/g' > {output}"
 rule fastqc_raw:
 	input:
 		"data/{sample}_{read}.fastq.gz"
