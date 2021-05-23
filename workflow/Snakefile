@@ -19,7 +19,8 @@ rule fetch_metadata:
 	message:
 		"-- Fetching metadata --"
 	shell:
-		"esearch -db sra -query {params} |efetch --format runinfo |awk -F "," 'NR>1 {print $0}' |cut -d "," -f 1,30|sed 's/_/,/g' > {output}"
+		"bash src/fetch_sra.sh {params} > {output}"
+
 rule fastqc_raw:
 	input:
 		"data/{sample}_{read}.fastq.gz"
@@ -107,7 +108,7 @@ rule sub_seq:
 	threads:
 		1
 	shell:
-		"seqtk sample -s100 {input} 20000 > {output}"
+		"seqtk sample -s100 {input} 30000 > {output}"
 
 rule dada_16S:
 	input:
