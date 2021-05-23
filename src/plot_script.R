@@ -5,7 +5,8 @@ require(patchwork)
 OTU <- readRDS("dada_table.rds")
 TAX <- readRDS("dada_tax.rds")
 
-metadata <- read.table("metadata.txt", sep="\t", header=TRUE)
+metadata <- read.table("metadata.txt", sep=",", header=FALSE, row.names=1)
+colnames(metadata) <- c("Study", "Plot", "Treatment", "Season")
 
 ps <- phyloseq(otu_table(OTU, taxa_are_rows=FALSE),
                tax_table(TAX), sample_data(metadata))
