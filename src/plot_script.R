@@ -1,5 +1,6 @@
 require(phyloseq)
 require(tidyverse)
+require(patchwork)
 
 OTU <- readRDS("dada_table.rds")
 TAX <- readRDS("dada_tax.rds")
@@ -15,20 +16,6 @@ ps <- merge_phyloseq(ps, dna)
 taxa_names(ps) <- paste0("ASV", seq(ntaxa(ps)))
 
 saveRDS(ps, file="dada_physeq.rds")
-
-tibble(sample=sample_names(ps), sum=sample_sums(ps)) %>% \
-	ggplot(aes(x=sample, y=sum)) +
-	geom_bar(stat="identity") + theme_classic() +
-	coord_flip() + scale_y_continuous(expand=c(0,0)) +
-	labs(y="Library size", x="")
-
-
-vegdist(otu_table(ps))
-p1 <- plot_ordination(subset_samples(ps, Season=="s"), ordinate(subset_samples(ps, Season=="s"), "NMDS", "bray"), color="Treatment") + geom_point(size=5, pch=15) + theme_classic()
-p2 <- plot_ordination(subset_samples(ps, Season=="a"), ordinate(subset_samples(ps, Season=="a"), "NMDS", "bray"), color="Treatment") + geom_point(size=5, pch=15) + theme_classic()
-p1+p2 +  plot_layout(guides = 'collect') & theme(legend.position='bottom')
-
-#p2 <- plot_ordination(subset_samples(ps, Season=="a"), ordinate(subset_samples(ps, Season=="a"), "NMDS", "bray"), color="Treatment") + geom_point(size=5, pch=21) + theme_classic() + scale_color_manual(values=c("darkgreen", "yellow", "pink", "grey90"))
 
 ps.s <- subset_samples(ps, Season=="s")
 ps.a <- subset_samples(ps, Season=="a")
