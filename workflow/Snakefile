@@ -95,7 +95,7 @@ rule sub_seq:
 	threads:
 		1
 	shell:
-		"seqtk sample -s100 {input} 10000 > {output}"
+		"seqtk sample -s100 {input} 20000 > {output}"
 
 rule dada_16S:
 	input:
