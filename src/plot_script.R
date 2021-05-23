@@ -8,7 +8,7 @@ TAX <- readRDS("dada_tax.rds")
 metadata <- read.table("metadata.txt", sep="\t", header=TRUE)
 
 ps <- phyloseq(otu_table(OTU, taxa_are_rows=FALSE),
-               tax_table(TAX))
+               tax_table(TAX), sample_data(metadata))
 
 dna <- Biostrings::DNAStringSet(taxa_names(ps))
 names(dna) <- taxa_names(ps)
