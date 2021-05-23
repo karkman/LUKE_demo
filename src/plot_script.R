@@ -39,6 +39,7 @@ p2 <- ggplot(tmp.a, aes(MDS1, MDS2, fill=Treatment)) + geom_point(pch=22, size=5
       scale_y_continuous(limits=c(-0.25, 0.25)) + scale_x_continuous(limits=c(-0.25, 0.25)) +
       scale_fill_manual(values=c("#327321", "#F9D649", "#F6C38E", "#FFFFFF")) + ggtitle("b)")
 
-p1 + p2 + plot_layout(guides = 'collect') & theme(legend.position='bottom')
+p1 + p2 + plot_annotation(title = paste("In total", ntaxa(ps) , "ASVs"), theme=theme(plot.title=element_text(size=15, face="bold"))) +
+          plot_layout(guides = 'collect') & theme(legend.position='bottom')
 
 graphics.off()
