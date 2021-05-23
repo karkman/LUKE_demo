@@ -5,7 +5,8 @@ rule all:
 		"data/multiqc_report.html",
 		"trimmed/multiqc_report.html",
 		"dada_table.rds",
-		"dada_tax.rds"
+		"dada_tax.rds",
+		 "dada_physeq.rds"
 
 rule fastqc_raw:
 	input:
@@ -42,8 +43,6 @@ rule cutadapt:
 	output:
 		bacfw="trimmed/{sample}_16S.1.fastq.gz",
 		bacrv="trimmed/{sample}_16S.2.fastq.gz",
-		#fungfw="trimmed/{sample}_ITS.1.fastq",
-		#fungITS="trimmed/{sample}_ITS.2.fastq",
 	message:
 		"-- Running Cutadapt --"
 	conda:

@@ -18,12 +18,12 @@ filtRs <- file.path(path, "filtered", paste0(sample.names, "_16S.2.fastq.gz"))
 names(filtFs) <- sample.names
 names(filtRs) <- sample.names
 
-out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=c(280,260),
+out <- filterAndTrim(fnFs, filtFs, fnRs, filtRs, truncLen=c(250,225),
               maxN=0, maxEE=c(1,1), truncQ=2, rm.phix=TRUE,
               compress=TRUE, multithread=TRUE)
 
-errF <- learnErrors(filtFs, multithread=TRUE, nbases=1e+07)
-errR <- learnErrors(filtRs, multithread=TRUE, nbases=1e+07)
+errF <- learnErrors(filtFs, multithread=TRUE, nbases=1e+08)
+errR <- learnErrors(filtRs, multithread=TRUE, nbases=1e+08)
 
 plotErrors(errF, nominalQ=TRUE)
 plotErrors(errR, nominalQ=TRUE)
