@@ -2,24 +2,11 @@ SAMPLES,READS, = glob_wildcards("data/{sample}_{read}.fastq.gz")
 
 rule all:
 	input:
-		"metadata.txt",
 		"data/multiqc_report.html",
 		"trimmed_data/multiqc_report.html",
 		"dada_table.rds",
 		"dada_tax.rds",
 		 "dada_physeq.rds"
-
-rule fetch_metadata:
-	output:
-		"metadata.txt"
-	params:
-		"PRJNA637213"
-	conda:
-		"envs/SRA_env.yml"
-	message:
-		"-- Fetching metadata --"
-	shell:
-		"bash src/fetch_sra.sh {params} > {output}"
 
 rule fastqc_raw:
 	input:
@@ -108,7 +95,7 @@ rule sub_seq:
 	threads:
 		1
 	shell:
-		"seqtk sample -s100 {input} 30000 > {output}"
+		"seqtk sample -s100 {input} 20000 > {output}"
 
 rule dada_16S:
 	input:
