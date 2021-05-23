@@ -31,12 +31,12 @@ tmp.a <- data.frame(tmp.a$points, Treatment=sample_data(ps.a)$Treatment)
 
 p1 <- ggplot(tmp.s, aes(MDS1, MDS2, fill=Treatment)) + geom_point(pch=22, size=5) +
       theme_classic() + theme(panel.border=element_rect(color="black", fill="NA", size=1)) +
-      scale_y_continuous(limits=c(-0.35, 0.35)) + scale_x_continuous(limits=c(-0.35, 0.35)) +
+      scale_y_continuous(limits=c(-0.25, 0.25)) + scale_x_continuous(limits=c(-0.25, 0.25)) +
       scale_fill_manual(values=c("#327321", "#F9D649", "#F6C38E", "#FFFFFF")) + ggtitle("a)")
 
 p2 <- ggplot(tmp.a, aes(MDS1, MDS2, fill=Treatment)) + geom_point(pch=22, size=5) +
       theme_classic() + theme(panel.border=element_rect(color="black", fill="NA", size=1)) +
-      scale_y_continuous(limits=c(-0.35, 0.35)) + scale_x_continuous(limits=c(-0.35, 0.35)) +
+      scale_y_continuous(limits=c(-0.25, 0.25)) + scale_x_continuous(limits=c(-0.25, 0.25)) +
       scale_fill_manual(values=c("#327321", "#F9D649", "#F6C38E", "#FFFFFF")) + ggtitle("b)")
 
 p1 + p2 + plot_layout(guides = 'collect') & theme(legend.position='bottom')
