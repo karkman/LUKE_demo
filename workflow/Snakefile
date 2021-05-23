@@ -3,7 +3,7 @@ SAMPLES,READS, = glob_wildcards("data/{sample}_{read}.fastq.gz")
 rule all:
 	input:
 		"data/multiqc_report.html",
-		"trimmed/multiqc_report.html",
+		"trimmed_data/multiqc_report.html",
 		"dada_table.rds",
 		"dada_tax.rds"
 
@@ -40,8 +40,8 @@ rule cutadapt:
 	params:
 		"{sample}"
 	output:
-		bacfw="trimmed/{sample}_16S.1.fastq.gz",
-		bacrv="trimmed/{sample}_16S.2.fastq.gz",
+		bacfw="trimmed_data/{sample}_16S.1.fastq.gz",
+		bacrv="trimmed_data/{sample}_16S.2.fastq.gz",
 		#fungfw="trimmed/{sample}_ITS.1.fastq",
 		#fungITS="trimmed/{sample}_ITS.2.fastq",
 	message:
@@ -54,15 +54,15 @@ rule cutadapt:
     		-e 0.2 --no-indels --discard-untrimmed \
     		-g 16S=GTGCCAGCMGCCGCGGTAA -g ITS=GTGARTCATCGARTCTTTG \
 			-G 16S=GGACTACHVHHHTWTCTAAT -G ITS=TCCTCCGCTTATTGATATGC \
-    		-o trimmed/{params}_{{name}}.1.fastq.gz -p trimmed/{params}_{{name}}.2.fastq.gz \
+    		-o trimmed_data/{params}_{{name}}.1.fastq.gz -p trimmed_data/{params}_{{name}}.2.fastq.gz \
     		{input.fw} {input.rv}
 			"""
 
 rule fastqc_trim:
 	input:
-		"trimmed/{sample}_16S.{read}.fastq.gz"
+		"trimmed_data/{sample}_16S.{read}.fastq.gz"
 	output:
-		"trimmed/FASTQC/{sample}_16S.{read}_fastqc.zip"
+		"trimmed_data/FASTQC/{sample}_16S.{read}_fastqc.zip"
 	message:
 		"-- Quality check of trimmed data with Fastqc --"
 	conda:
@@ -70,19 +70,33 @@ rule fastqc_trim:
 	threads:
 		2
 	shell:
-		"fastqc --quiet -t {threads} --outdir trimmed/FASTQC -f fastq {input}"
+		"fastqc --quiet -t {threads} --outdir trimmed_data/FASTQC -f fastq {input}"
 
 rule multiqc_trim:
 	input:
-		expand("trimmed/FASTQC/{sample}_16S.{read}_fastqc.zip", sample=SAMPLES, read=READS)
+		expand("trimmed_data/FASTQC/{sample}_16S.{read}_fastqc.zip", sample=SAMPLES, read=READS)
 	output:
-		"trimmed/multiqc_report.html"
+		"trimmed_data/multiqc_report.html"
 	message:
 		"-- Running MultiQC for trimmed data--"
 	conda:
 		"envs/QC_env.yml"
 	shell:
-		"multiqc -f --interactive --quiet trimmed/ -o trimmed/"
+		"multiqc -f --interactive --quiet trimmed_data/ -o trimmed_data/"
+
+rule sub_seq:
+	input:
+		"trimmed_data/{sample}_16S.{read}.fastq.gz"
+	output:
+		"trimmed/{sample}_16S.{read}.fastq.gz"
+	message:
+		"-- Subsampling Sample: {wildcards.sample} Read file: {wildcards.read} --"
+	conda:
+		"envs/seqtk_env.yml"
+	threads:
+		1
+	shell:
+		"seqtk sample -s100 {input} 10000 > {output}"
 
 rule dada_16S:
 	input:
